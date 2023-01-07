@@ -21,15 +21,15 @@ impl Config {
             query = args[1].clone();
             file_path = args[2].clone();
         } else {
-            let flags = args.iter().find(|arg| arg.starts_with("-"));
+            let flags: Vec<&String> = args.iter().filter(|arg| arg.starts_with("-")).collect();
             let other_args: Vec<&String> =
                 args.iter().filter(|arg| !arg.starts_with("-")).collect();
 
             query = other_args[1].clone();
             file_path = other_args[2].clone();
 
-            if let Some(flags) = flags {
-                if flags.contains("i") {
+            for flag_string in flags {
+                if flag_string.contains("i") {
                     ignore_case = true;
                 }
             }
