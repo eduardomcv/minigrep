@@ -12,10 +12,28 @@ impl Config {
             return Err("Not enough arguments!");
         }
 
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        let query;
+        let file_path;
 
-        let ignore_case = env::var("IGNORE_CASE").is_ok();
+        let mut ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        if args.len() == 3 {
+            query = args[1].clone();
+            file_path = args[2].clone();
+        } else {
+            let flags = args.iter().find(|arg| arg.starts_with("-"));
+            let other_args: Vec<&String> =
+                args.iter().filter(|arg| !arg.starts_with("-")).collect();
+
+            query = other_args[1].clone();
+            file_path = other_args[2].clone();
+
+            if let Some(flags) = flags {
+                if flags.contains("i") {
+                    ignore_case = true;
+                }
+            }
+        }
 
         Ok(Config {
             query,
