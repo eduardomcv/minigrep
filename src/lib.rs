@@ -10,17 +10,15 @@ impl Config {
     pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
         args.next();
 
-        let args_vec: Vec<String> = args.collect();
+        let (flags, other_args): (Vec<String>, Vec<String>) =
+            args.partition(|arg| arg.starts_with("-"));
 
-        let flags = args_vec.iter().filter(|arg| arg.starts_with("-"));
-        let mut other_args = args_vec.iter().filter(|arg| !arg.starts_with("-"));
-
-        let query = match other_args.next() {
+        let query = match other_args.get(0) {
             Some(arg) => arg.to_owned(),
             None => return Err("Didn't get a query string!"),
         };
 
-        let file_path = match other_args.next() {
+        let file_path = match other_args.get(1) {
             Some(arg) => arg.to_owned(),
             None => return Err("Didn't get a file path!"),
         };
