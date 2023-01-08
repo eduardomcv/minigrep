@@ -8,6 +8,7 @@ pub struct Config {
 
 impl Config {
     pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        // Skip first value
         args.next();
 
         let (flags, other_args): (Vec<String>, Vec<String>) =
